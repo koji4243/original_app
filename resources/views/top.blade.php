@@ -10,21 +10,18 @@
                 <form method="GET" action="{{ route('top') }}">
 
                 <select name="date" class="d-block mt-2 form-select form-control">
-                    <option value="" disabled {{ request('date') ? '' : 'selected' }}>
-                        日付を選択してください
-                    </option>
                     @for ($i = 0; $i <= 6; $i++)
                         @php $date = today()->addDays($i)->format('Y-m-d'); @endphp
                         <option value="{{ $date }}"
                             class="p-1 text-center"
-                            {{ request('date') == $date ? 'selected' : '' }}>
+                            {{ old('date', request('date')) == $date ? 'selected' : '' }}>
                             {{ today()->addDays($i)->isoFormat('MM/DD (ddd)') }}
                         </option>
                     @endfor
                 </select>
 
                 <select name="area" class="d-block mt-1 form-select form-control">
-                    <option value="" disabled {{ request('area') ? '' : 'selected' }}>
+                    <option value="" {{ request('area') ? '' : 'selected' }}>
                         エリアを選択してください
                     </option>
                     @foreach($areas as $area)
@@ -36,7 +33,7 @@
                 </select>
 
                 @if ($errors->any())
-                    <div class="mt-1 alert alert-danger">
+                    <div class="mt-1 alert alert-danger text-start">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -82,7 +79,11 @@
                         <th style="width:27%">番組タイトル</th>
                         <th style="width:12%">ジャンル</th>
                         <th style="width:33%">詳細</th>
-                        <th style="width:10%">予約</th>
+                        <th class="auth" style="width:10%">予約<br>
+                            @if(!auth()->check())
+                                <small class="auth ">※認証が必要です</small>
+                            @endif
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

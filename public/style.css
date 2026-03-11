@@ -79,3 +79,15 @@ body {
 .table tbody tr:nth-child(2n) td {
     background-color: #eee;
 }
+table thead th {
+    position: relative;
+}
+table thead th .auth {
+    font-weight: 200 !important;
+    font-size: 0.75rem;
+    position: absolute;
+    right: 12px;
+    bottom: 2px;
+    white-space: nowrap;
+    color: rgb(50, 54, 50);
+}

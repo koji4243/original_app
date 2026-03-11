@@ -5,30 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\NhkArea;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class ToppageController extends Controller
 {
     public function toppage(Request $request){
-    $areas = NhkArea::all();
-    $programs = collect();
+        $areas = NhkArea::all();
+        $programs = collect();
 
-    // 入力値取得
-    $date = $request->input('date');
-    $area = $request->input('area');
 
-    // バリデーション
-    if ($request->filled(['date', 'area']) || empty($request)) {
-        $errors = [];
-        if (!$date) {
-            $errors['date'] = '日付を選択してください';
-        }
-        if (!$area) {
-            $errors['area'] = 'エリアを選択してください';
-        }
-        if (!empty($errors)) {
-            return redirect()->route('top')
-                            ->withErrors($errors)
-                            ->withInput();
+        if ($request->query()) {
+            // バリデーションルール
+            $validator = Validator::make($request->all(), [
+                'area' => 'required',
+            ]);
+            if ($validator->fails()) {
+                // withInput() で入力値をセッションへ一時保存
+                return redirect()->back()->withErrors($validator)->withInput();
             }
         }
 

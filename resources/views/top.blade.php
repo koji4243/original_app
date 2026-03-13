@@ -104,7 +104,8 @@
                                 @if(auth()->check())
                                     <form method="POST" action="#">
                                         @csrf
-                                        <button class="btn btn-primary btn-sm">予約</button>
+                                        
+                                        <a href="{{ route('setting') }}" class="btn btn-primary btn-sm">予約</a>
                                     </form>
                                 @endif
                             </td>
@@ -113,6 +114,26 @@
                 </tbody>
             </table>
         @endif
+        <!-- 上に戻るボタン -->
+        <button id="backToTop">↑ TOP</button>
     </section>
+    <script>
+    const backToTopButton = document.getElementById('backToTop');
+    // スクロールイベント
+    window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {   // 300pxスクロールしたら表示
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+    });
+    // ボタンクリックで上に戻る
+    backToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'   // スムーズスクロール
+        });
+    });
+    </script>
 </div>
 @endsection

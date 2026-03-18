@@ -35,5 +35,14 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
-    Route::get('/setting', [ReservationController::class, 'create'])->name('setting');
-});
+
+    Route::get('/setting', [ReservationController::class, 'create'])->name('creste');
+
+    Route::post('/setting', [ReservationController::class, 'setting'])->name('setting');
+
+    Route::post('/setting/check', [ReservationController::class, 'check'])->name('check');
+
+    Route::post('/setting/{User}/store', [ReservationController::class, 'store'])->name('store');
+
+    Route::get('/{user}/list', [ReservationController::class, 'list'])->name('reservation.list');
+    });

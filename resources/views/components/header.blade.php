@@ -25,9 +25,8 @@
                             {{ Auth::user()->name }}
                         </a>
 
-
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('reservation.list', ['user' => Auth::user()]) }}">
                                 予約リスト
                             </a>
 

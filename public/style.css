@@ -28,6 +28,13 @@ body {
     font-size: 0.9rem;
     color: #333;
 }
+ul {
+    padding: 0;
+}
+li {
+    text-align: center;
+    list-style: none;
+}
 .logo {
     font-family: "Lilita One";
     font-weight: 600;
@@ -123,18 +130,14 @@ tbody > tr > .th2 {
 tbody > tr > .td2 {
     background-color: #fff !important;
     height: 50px;
-    line-height: 50px;
-    padding: 8px 8px 8px 40px;
+    padding: 20px 8px 8px 32px;
 }
-.mail_pusu {
+.mail_push {
     background: linear-gradient(transparent 80%, #f4fa88 20%);
     color: #5a4602;
     font-size: 1.3rem;
     margin-left: 12px;
     line-height: 48px;
-}
-my-form > select > option {
-    font-size: 2rem;
 }
 .box {
     margin-top: 4px;
@@ -146,4 +149,17 @@ my-form > select > option {
     display: flex;
     align-items: center;
     border: 1px solid #eee;
+}
+.parent {
+    position: relative;
+}
+.posision_change {
+    position: absolute;
+    left: 10px;
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+.checked {
+    font-size: 0.8rem !important;
+    font-weight: 400;
 }

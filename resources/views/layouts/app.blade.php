@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="{{ asset('style.css') }}">    </head>
     <body>
         <div id="app">
-            @component('components.header')
+            @component('components.header', ['user' => '$user'])
             @endcomponent
 
             <main class="py-4">

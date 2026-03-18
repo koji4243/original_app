@@ -120,6 +120,8 @@ return [
         ],
     ],
 
-    'attributes' => [],
-
+    'attributes' => [
+        'set' => '時間',
+        'area' => 'エリア'
+    ],
 ];

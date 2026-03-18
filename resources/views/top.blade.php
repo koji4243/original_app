@@ -9,7 +9,7 @@
                 <h5 class="sab mt-2">総合1</h5>
                 <form method="GET" action="{{ route('top') }}">
 
-                <select name="date" class="d-block mt-2 form-select form-control">
+                <select name="date" class="d-block mt-3 form-select form-control">
                     @for ($i = 0; $i <= 6; $i++)
                         @php $date = today()->addDays($i)->format('Y-m-d'); @endphp
                         <option value="{{ $date }}"
@@ -31,6 +31,13 @@
                         </option>
                     @endforeach
                 </select>
+
+                {{-- フラッシュメッセージの表示 --}}
+                @if (session('message'))
+                    <div class="mt-1 alert alert-success">
+                        {{ session('message') }}
+                    </div>
+                @endif
 
                 @if ($errors->any())
                     <div class="mt-1 alert alert-danger text-start">
@@ -88,25 +95,54 @@
                 </thead>
                 <tbody>
                     @foreach (data_get($programs, 'g1.publication', []) as $program )
+                        @php
+                            $programId = $program['identifierGroup']['tvSeriesId'] ?? '';
+                            $programStart = \Carbon\Carbon::parse($program['startDate'])->format('Y-m-d H:i:s');
+
+                            // 予約済みか判定
+                            $isReserved = collect($reservedReservations)->contains(function($reservation) use ($programId, $programStart) {
+                                return $reservation->nhk_tvEpisodeId === $programId
+                                    && \Carbon\Carbon::parse($reservation->start_time)->format('Y-m-d H:i:s') === $programStart;
+                            });
+                        @endphp
+
                         <tr>
                             <td class="align-middle p-2 text-center">
                                 {{ \Carbon\Carbon::parse($program['startDate'])->format('H:i') }}
                                 ~
                                 {{ \Carbon\Carbon::parse($program['endDate'])->format('H:i') }}
                             </td>
-                            <td class="align-middle ps-6 p-2 ms-6">
+                            <td class="align-middle ps-5 p-2">
                                 {{ $program['identifierGroup']['tvSeriesName'] ?? $program['name']}}<br>
                                 - {{ $program['identifierGroup']['tvEpisodeName'] ?? '' }}
                             </td>
                             <td class="align-middle text-center p-2">{{ data_get($program, 'identifierGroup.genre.0.name1', '-') }}</td>
-                            <td class="align-middle description p-2">{{ $program['description'] }}</td>
+                            <td class="align-middle description p-2">{{ $program['description'] ?? '' }}</td>
                             <td class="align-middle text-center p-2">
                                 @if(auth()->check())
-                                    <form method="POST" action="#">
-                                        @csrf
-                                        
-                                        <a href="{{ route('setting') }}" class="btn btn-primary btn-sm">予約</a>
-                                    </form>
+                                    @if($isReserved)
+                                        <div class="d-flex align-items-center">
+                                            <svg class="p-0" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
+                                                <path fill="#c8e6c9" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path><path fill="#4caf50" d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"></path>
+                                            </svg>
+                                            <span class="d-block checked text-success">予約済み</span>
+                                        </div>
+
+                                    @else
+                                        <form method="POST" action="{{ route('setting') }}">
+                                            @csrf
+                                            <input type="hidden" name="title" value="{{ $program['identifierGroup']['tvSeriesName'] ?? $program['name'] }}">
+                                            <input type="hidden" name="sub_title" value="{{ $program['identifierGroup']['tvEpisodeName'] ?? '' }}">
+                                            <input type="hidden" name="description" value="{{ $program['description'] ?? '' }}">
+                                            <input type="hidden" name="genres" value="{{ data_get($program, 'identifierGroup.genre.0.name1', '-') }}">
+                                            <input type="hidden" name="start" value="{{ \Carbon\Carbon::parse($program['startDate'])->format('Y-m-d H:i:s') }}">
+                                            <input type="hidden" name="end" value="{{ \Carbon\Carbon::parse($program['endDate'])->format('Y-m-d h:i:s')  }}">
+                                            <input type="hidden" name="nhkId" value="{{ $program['identifierGroup']['tvSeriesId'] ?? '' }}">
+                                            <input type="hidden" name="areaId" value="{{ $program['identifierGroup']['areaId'] }}">
+
+                                            <button class="btn btn-primary btn-sm" type="submit">予約</button>
+                                        </form>
+                                    @endif
                                 @endif
                             </td>
                         </tr>
@@ -121,13 +157,12 @@
     const backToTopButton = document.getElementById('backToTop');
     // スクロールイベント
     window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {   // 300pxスクロールしたら表示
+    if (window.scrollY > 500) {
         backToTopButton.style.display = 'block';
     } else {
         backToTopButton.style.display = 'none';
     }
     });
-    // ボタンクリックで上に戻る
     backToTopButton.addEventListener('click', () => {
     window.scrollTo({
         top: 0,

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\SendMail;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -52,5 +54,10 @@ class ReservationController extends Controller
 
         $request->session()->forget('nhk');
         return redirect()->route('top')->with('message', '予約完了しました。\nメール通知をお待ちください。');
+    }
+
+    public function sendMail(){
+        $user = User::find(1);
+        Mail::to($user)->send(new SendMail($user));
     }
 }

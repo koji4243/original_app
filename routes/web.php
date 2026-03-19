@@ -15,6 +15,8 @@ use App\Http\Controllers\ReservationController;
 |
 */
 
+Route::get('/mail',[ReservationController::class, 'sendMail']);
+
 Route::get('/',[ToppageController::class, 'toppage'])->name('top');
 
 

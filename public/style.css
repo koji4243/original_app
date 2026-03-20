@@ -163,3 +163,27 @@ tbody > tr > .td2 {
     font-size: 0.8rem !important;
     font-weight: 400;
 }
+
+/** 登録情報変更 **/
+div.input-group > .input-group-text.fs-6 {
+    font-size: 0.6rem !important;
+}
+button.update_btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow:
+        0 6px 0 #c92a2a,
+        0 8px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+    position: relative;
+    top: 0;
+}
+button.update_btn:hover {
+    background: #ff5252;
+}

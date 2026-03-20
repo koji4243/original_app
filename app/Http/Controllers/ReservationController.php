@@ -38,6 +38,7 @@ class ReservationController extends Controller
         return view('reservation.check', compact('set', 'notifyTime', 'user'));
     }
     public function store(Request $request){
+        $user = Auth::user();
 
         $reservation = new Reservation();
         $reservation->nhk_title = session('nhk.title');
@@ -49,15 +50,11 @@ class ReservationController extends Controller
         $reservation->nhk_code = session('nhk.areaId');
         $reservation->is_active = true;
         $reservation->notify_before_min = $request->input('set');
-        $reservation->user_id = Auth::id();
+        $reservation->user_id = $user->id;
         $reservation->save();
 
+        Mail::to($user)->send(new SendMail($user));
         $request->session()->forget('nhk');
         return redirect()->route('top')->with('message', '予約完了しました。\nメール通知をお待ちください。');
-    }
-
-    public function sendMail(){
-        $user = User::find(1);
-        Mail::to($user)->send(new SendMail($user));
     }
 }

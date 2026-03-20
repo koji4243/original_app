@@ -30,6 +30,10 @@
                                 予約リスト
                             </a>
 
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                プロフィール情報変更
+                            </a>
+
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">

@@ -1,11 +1,11 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
+        <h2 class="mt-2 p-2 h3 text-center">
+            パスワードを更新
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+        <p class="text-center p-2">
+            アカウントの安全性を保つため、<br>長くてランダムなパスワードを使用してください。
         </p>
     </header>
 
@@ -13,36 +13,39 @@
         @csrf
         @method('put')
 
-        <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
-        </div>
+        <div class="text-center px-4">
+            <div class="row input-group">
+                <x-input-label class="col-md-5 input-group-text" for="update_password_current_password" value="現在のパスワード" />
+                <x-text-input id="update_password_current_password" name="current_password" type="password" class="col-md-5 form-control" autocomplete="current-password" />
+                <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-1 alert alert-danger" />
+            </div>
 
-        <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
-        </div>
+            <div class="row input-group">
+                <x-input-label class="col-md-5 input-group-text" for="update_password_password" value="新しいパスワード" />
+                <x-text-input id="update_password_password" name="password" type="password" class="col-md-5 form-control" autocomplete="new-password" />
+                <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-1 alert alert-danger" />
+            </div>
 
-        <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
-        </div>
+            <div class="row input-group">
+                <x-input-label class="col-md-5 input-group-text" for="update_password_password_confirmation" :value="__('Confirm Password')" />
+                <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="col-md-5 form-control" autocomplete="new-password" />
+                <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-1 alert alert-danger" />
+            </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <div class="mt-2">
+                <x-primary-button class="update_btn">更新する</x-primary-button>
 
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
+                @if (session('status') === 'password-updated')
+                    <p
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        x-init="setTimeout(() => show = false, 2000)"
+                        class="mt-2 fs-5 bg-success-subtle px-2 py-1 rounded"
+                        style="color:#1f2937; border-color:#a3cfbb;"
+                    >更新しました</p>
+                @endif
+            </div>
         </div>
     </form>
 </section>

@@ -163,6 +163,19 @@ tbody > tr > .td2 {
     font-size: 0.8rem !important;
     font-weight: 400;
 }
+.icon_font {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #d61f1f;
+}
+.icons_div {
+    margin: 0 auto;
+    margin-top: 16px;
+    width: 40px;
+}
+.logo.top {
+    background-color: transparent;
+}
 
 /** 登録情報変更 **/
 div.input-group > .input-group-text.fs-6 {

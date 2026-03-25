@@ -8,18 +8,20 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendMail extends Mailable
 {
     use Queueable, SerializesModels;
     protected $user;
-    
+    protected $reservation;
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $reservation)
     {
         $this->user = $user;
+        $this->reservation = $reservation;
     }
 
     /**
@@ -41,6 +43,7 @@ class SendMail extends Mailable
             view: 'mail.body',
             with: [
             'user' => $this->user,
+            'reservation' => $this->reservation,
             ],
         );
     }

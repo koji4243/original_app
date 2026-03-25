@@ -97,12 +97,17 @@
                     @foreach (data_get($programs, 'g1.publication', []) as $program )
                         @php
                             $programId = $program['identifierGroup']['tvSeriesId'] ?? '';
-                            $programStart = \Carbon\Carbon::parse($program['startDate'])->format('Y-m-d H:i:s');
-
+                            $programStart = \Carbon\Carbon::parse($program['startDate'])->format('H:i');
+                            $programStartDate = \Carbon\Carbon::parse($program['startDate'])->format('Y:m:d H:i');
                             // 予約済みか判定
-                            $isReserved = collect($reservedReservations)->contains(function($reservation) use ($programId, $programStart) {
+                            $isReserved = $reservedReservations->contains(function($reservation) use ($programId, $programStart) {
                                 return $reservation->nhk_tvEpisodeId === $programId
-                                    && \Carbon\Carbon::parse($reservation->start_time)->format('Y-m-d H:i:s') === $programStart;
+                                    && \Carbon\Carbon::parse($reservation->start_time)->format('H:i') === $programStart;
+                            });
+                            //より厳密な予約済かを判定
+                            $isReservedDate = $reservedReservations->contains(function($reservation) use ($programId, $programStartDate) {
+                                return $reservation->nhk_tvEpisodeId === $programId
+                                    && \Carbon\Carbon::parse($reservation->start_time)->format('Y:m:d H:i') === $programStartDate;
                             });
                         @endphp
 
@@ -121,13 +126,32 @@
                             <td class="align-middle text-center p-2">
                                 @if(auth()->check())
                                     @if($isReserved)
-                                        <div class="d-flex align-items-center">
-                                            <svg class="p-0" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
-                                                <path fill="#c8e6c9" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path><path fill="#4caf50" d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"></path>
-                                            </svg>
-                                            <span class="d-block checked text-success">予約済み</span>
+                                        @if($isReservedDate)
+                                            <div class="d-flex align-items-center">
+                                                <svg class="p-0" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
+                                                    <path fill="#c8e6c9" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path><path fill="#4caf50" d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"></path>
+                                                </svg>
+                                                <span class="d-block checked text-success">予約済み</span>
+                                            </div>
+                                        @else
+                                        <div class="icons_div">
+                                            <img class="img-fluid" src="{{ asset('/image/icons.png') }}" alt="リモコン">
                                         </div>
+                                        <p class="icon_font mt-1">過去に<br>予約しています</p>
+                                            <form method="POST" action="{{ route('setting') }}">
+                                                @csrf
+                                                <input type="hidden" name="title" value="{{ $program['identifierGroup']['tvSeriesName'] ?? $program['name'] }}">
+                                                <input type="hidden" name="sub_title" value="{{ $program['identifierGroup']['tvEpisodeName'] ?? '' }}">
+                                                <input type="hidden" name="description" value="{{ $program['description'] ?? '' }}">
+                                                <input type="hidden" name="genres" value="{{ data_get($program, 'identifierGroup.genre.0.name1', '-') }}">
+                                                <input type="hidden" name="start" value="{{ \Carbon\Carbon::parse($program['startDate'])->format('Y-m-d H:i:s') }}">
+                                                <input type="hidden" name="end" value="{{ \Carbon\Carbon::parse($program['endDate'])->format('Y-m-d h:i:s')  }}">
+                                                <input type="hidden" name="nhkId" value="{{ $program['identifierGroup']['tvSeriesId'] ?? '' }}">
+                                                <input type="hidden" name="areaId" value="{{ $program['identifierGroup']['areaId'] }}">
 
+                                                <button class="btn btn-primary btn-sm mb-2" type="submit">予約</button>
+                                            </form>
+                                        @endif
                                     @else
                                         <form method="POST" action="{{ route('setting') }}">
                                             @csrf

@@ -1,6 +1,7 @@
 <html>
     <body>
         <p>{{ $user->name }}さん、こんにちわ</p>
-        <p>予約完了しました</p>  
+        <p>{{ $reservation->start_time }}までもうすぐです！</p>
+        <p>{{ $reservation->title }}お見逃しなく</p>  
     </body>
 </html>

@@ -14,7 +14,8 @@ use App\Http\Controllers\ReservationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+        //試し
+Route::get('/mail', [ReservationController::class, 'mail']);
 Route::get('/',[ToppageController::class, 'toppage'])->name('top');
 
 Route::middleware('auth')->group(function () {
@@ -35,4 +36,5 @@ Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
     Route::post('/setting/{User}/store', [ReservationController::class, 'store'])->name('store');
 
     Route::get('/{user}/list', [ReservationController::class, 'list'])->name('reservation.list');
+
     });

@@ -42,7 +42,7 @@ class ReservationController extends Controller
 
         $reservation = new Reservation();
         $reservation->nhk_title = session('nhk.title');
-        $reservation->nhk_description = session('nhk.description');
+        $reservation->nhk_description = session('nhk.description') ?? '説明なし' ;
         $reservation->nhk_genres = session('nhk.genres');
         $reservation->start_time = session('nhk.start');
         $reservation->end_time = session('nhk.end');
@@ -53,8 +53,11 @@ class ReservationController extends Controller
         $reservation->user_id = $user->id;
         $reservation->save();
 
-        Mail::to($user)->send(new SendMail($user));
         $request->session()->forget('nhk');
         return redirect()->route('top')->with('message', '予約完了しました。\nメール通知をお待ちください。');
+    }
+    public function mail(){
+
+        return redirect()->route('top');
     }
 }

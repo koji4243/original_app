@@ -22,7 +22,10 @@ class ReservationController extends Controller
         return view('reservation.create');
     }
     public function list(User $user){
-        return view('reservation.list');
+        $users = User::with(['reservations' => function($query) {
+            $query->orderBy('start_time', 'desc');
+        }])->get();
+        return view('reservation.list', compact('users', 'user'));
     }
     public function setting(Request $request){
         $request->session()->put('nhk', $request->all());

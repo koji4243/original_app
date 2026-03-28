@@ -6,7 +6,7 @@
         <div class="col-md-3 mx-auto">
             <div class="text-center my-2">
                 <h1 class="p-2">NHK番組表</h1>
-                <h5 class="sab mt-2">総合1</h5>
+                <h5 class="sab mt-2">総合 1</h5>
                 <form method="GET" action="{{ route('top') }}">
 
                 <select name="date" class="d-block mt-3 form-select form-control">
@@ -176,7 +176,6 @@
         @endif
         <!-- 上に戻るボタン -->
         <button id="backToTop">↑ TOP</button>
-    </section>
     <script>
     const backToTopButton = document.getElementById('backToTop');
     // スクロールイベント

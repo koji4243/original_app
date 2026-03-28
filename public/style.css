@@ -19,7 +19,6 @@
     border-color: #eca982;
     box-shadow: 0 0 0 0.25rem #d9520440;
 }
-
 body {
     background: seashell;
     font-family: "LINE Seed JP", sans-serif;
@@ -69,7 +68,6 @@ li {
     --bs-table-bg: #ffe5e5;
     --bs-table-color: #333;
 }
-
 .saturday {
     --bs-table-bg: #e6ecff;
     --bs-table-color: #333;
@@ -177,7 +175,7 @@ tbody > tr > .td2 {
     background-color: transparent;
 }
 
-/** 登録情報変更 **/
+/* 登録情報変更 */
 div.input-group > .input-group-text.fs-6 {
     font-size: 0.6rem !important;
 }
@@ -200,7 +198,6 @@ button.update_btn {
 button.update_btn:hover {
     background: #ff5252;
 }
-
 /** 予約リスト **/
 li .list_poji {
     position: relative;
@@ -214,7 +211,6 @@ li .list_poji {
     bottom: 16px;
     right: 16px;
 }
-
 .delete {
     background: #ff6b6b;
     color: white;
@@ -224,4 +220,10 @@ li .list_poji {
     border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
+}
+/* header右部分 */
+.header_poji {
+    position: relative;
+    top: 8px;
+    left: 6px;
 }

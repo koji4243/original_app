@@ -13,7 +13,7 @@
         @csrf
         @method('put')
 
-        <div class="text-center px-4">
+        <div class="text-center px-4 py-2">
             <div class="row input-group">
                 <x-input-label class="col-md-5 input-group-text" for="update_password_current_password" value="現在のパスワード" />
                 <x-text-input id="update_password_current_password" name="current_password" type="password" class="col-md-5 form-control" autocomplete="current-password" />
@@ -32,7 +32,7 @@
                 <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-1 alert alert-danger" />
             </div>
 
-            <div class="mt-2">
+            <div class="mt-3">
                 <x-primary-button class="update_btn">更新する</x-primary-button>
 
                 @if (session('status') === 'password-updated')

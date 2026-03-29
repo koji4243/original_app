@@ -172,7 +172,7 @@ tbody > tr > .td2 {
     width: 40px;
 }
 .logo.top {
-    background-color: transparent;
+    background-color: transparent !important;
 }
 
 /* 登録情報変更 */
@@ -226,4 +226,13 @@ li .list_poji {
     position: relative;
     top: 8px;
     left: 6px;
+}
+
+.font_change {
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: 0.5s;
+}
+.font_change:hover {
+    color: #4d27b7;
 }

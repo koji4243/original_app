@@ -4,7 +4,7 @@
             プロフィール情報
         </h2>
 
-        <p class="text-center p-2">
+        <p class="text-center p-2 mb-0">
             ユーザー名とメールアドレスを変更できます
         </p>
     </header>
@@ -13,11 +13,11 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="#">
         @csrf
         @method('patch')
 
-        <div class="text-center p-4">
+        <div class="text-center px-4 py-2">
             <div class="row input-group">
                 <x-input-label class="col-md-4 input-group-text" for="name" :value="__('Name')" />
                 <x-text-input id="name" name="name" type="text" class="col-md-4 form-control" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -48,7 +48,7 @@
                 @endif
             </div>
 
-            <div class="mt-2">
+            <div class="mt-3">
                 <x-primary-button class="update_btn">更新する</x-primary-button>
 
                 @if (session('status') === 'profile-updated')

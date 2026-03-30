@@ -20,7 +20,7 @@
 
                         <!-- Password -->
                         <div class="mt-2">
-                            <x-input-label class="form-labe m-0" for="password" :value="__('Password')" />
+                            <x-input-label class="form-label m-0" for="password" :value="__('Password')" />
 
                             <x-text-input id="password" class="form-control"
                                             type="password"
@@ -32,9 +32,9 @@
 
                         <!-- Remember Me -->
                         <div class="block mt-2">
-                            <label for="remember_me" class="inline-flex items-center">
-                                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                            <label for="remember_me" class="d-flex align-items-center form-check-label m-0">
+                                <input id="remember_me" type="checkbox" name="remember">
+                                <span class="ms-1">{{ __('Remember me') }}</span>
                             </label>
                         </div>
 
@@ -43,7 +43,7 @@
                                 会員登録
                             </a>
                             @if (Route::has('password.request'))
-                                <a class="font_change m-1" href="{{ route('password.request') }}">
+                                <a class="font_change ms-1" href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif

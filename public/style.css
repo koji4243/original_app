@@ -236,3 +236,11 @@ li .list_poji {
 .font_change:hover {
     color: #4d27b7;
 }
+/* ログイン画面 */
+#remember_me {
+    accent-color: red;
+}
+div > label > span {
+    color: #555;
+    font-size: 0.8rem;
+}

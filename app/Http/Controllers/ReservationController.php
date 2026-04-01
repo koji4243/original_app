@@ -9,8 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\SendMail;
 use Illuminate\Support\Facades\Mail;
-
-
+use App\Events\Reservationed;
+use App\Listeners\SendQueueMail;
 
 class ReservationController extends Controller
 {
@@ -56,8 +56,23 @@ class ReservationController extends Controller
         $reservation->user_id = $user->id;
         $reservation->save();
 
+        // イベント発火 → キュー
+        $now = now()->floorMinute(); 
+
+        $reservations = Reservation::with('user')
+            ->whereNotNull('notify_before_min')
+            ->whereNull('notify_at')
+            ->whereRaw(
+                'DATE_FORMAT(DATE_SUB(start_time, INTERVAL notify_before_min MINUTE), "%Y-%m-%d %H:%i") BETWEEN ? AND ?',
+                [$now->copy()->subMinutes(10)->format('Y-m-d H:i'), $now->format('Y-m-d H:i')]
+            )
+            ->get();
+        foreach ($reservations as $reservation) {
+            event(new Reservationed($reservation));
+        }
+
         $request->session()->forget('nhk');
-        return redirect()->route('top')->with('message', '予約完了しました。\nメール通知をお待ちください。');
+        return redirect()->route('top')->with('message', '予約完了しました。メール通知をお待ちください。');
     }
     public function mail(){
 

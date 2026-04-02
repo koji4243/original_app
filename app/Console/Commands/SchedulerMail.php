@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Events\Reservationed;
 
 class SchedulerMail extends Command
 {
@@ -28,7 +29,7 @@ class SchedulerMail extends Command
      * Execute the console command.
      */
     public function handle(){
-        Log::info('scheduler start', ['time' => now()]);
+         // イベント発火 → キュー
         $now = now()->floorMinute(); 
 
         $reservations = Reservation::with('user')
@@ -39,25 +40,8 @@ class SchedulerMail extends Command
                 [$now->copy()->subMinutes(10)->format('Y-m-d H:i'), $now->format('Y-m-d H:i')]
             )
             ->get();
-            Log::info($reservations->toArray());
-
         foreach ($reservations as $reservation) {
-            $user = $reservation->user;
-
-            if (!$user || !$user->email) {
-                continue;
-            }
-            Log::info('sending mail', [
-                'reservation_id' => $reservation->id,
-                'user_id' => $user->id,
-            ]);
-            // メール送信（同期）
-            Mail::to($user->email)
-                ->send(new SendMail($user, $reservation));
-            $reservation->update([
-                'notify_at' => now(),
-            ]);
+            event(new Reservationed($reservation));
         }
-    return 0;
     }
 }

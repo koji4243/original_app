@@ -5,16 +5,15 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # 【追加】プロジェクトのルートがドメイン直下なら / を指定
+    # もし http://ubuntu.local なら /my-app/ にする
+    RewriteBase /
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # 末尾のスラッシュをリダイレクトで処理（ここが原因でPOSTが消えることがある）
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # ファイルやディレクトリが存在しない場合は index.php へ
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

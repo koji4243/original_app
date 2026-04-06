@@ -8,6 +8,8 @@ use App\Models\Reservation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Events\Reservationed;
+use App\Mail\SendOfQueueMail;
+
 
 class SchedulerMail extends Command
 {
@@ -29,7 +31,7 @@ class SchedulerMail extends Command
      * Execute the console command.
      */
     public function handle(){
-         // イベント発火 → キュー
+        //通知時間抽出 → メール送信
         $now = now()->floorMinute(); 
 
         $reservations = Reservation::with('user')
@@ -41,7 +43,20 @@ class SchedulerMail extends Command
             )
             ->get();
         foreach ($reservations as $reservation) {
-            event(new Reservationed($reservation));
+            $reservation = Reservation::with('user')->find($reservation->id);
+            if (!$reservation || !$reservation->user) {
+                Log::error('Reservation or user not found', [
+                    'reservation_id' => $this->reservationId
+                ]);
+                return;
+            }
+            Mail::to($reservation->user->email)
+                ->send(new SendOfQueueMail($reservation->user, $reservation));
+
+                // notify_at更新
+            if (!$reservation->notify_at) {
+                $reservation->update(['notify_at' => now()]);
+            }
         }
     }
 }

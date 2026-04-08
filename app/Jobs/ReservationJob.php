@@ -13,26 +13,28 @@ use App\Mail\SendOfQueueMail;
 use App\Models\Reservation;
 
 
-class Job implements ShouldQueue
+class ReservationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $reservationId;
+
+    protected $reservation;
     /**
      * Create a new job instance.
      */
-    public function __construct($reservationId)
+    public function __construct($reservation)
     {
-        $this->reservationId = $reservationId;
+        $this->reservation = $reservation;
     }
 
     /**
      * Execute the job.
      */
     public function handle(): void{
-        $reservation = Reservation::with('user')->find($this->reservationId);
+        $reservation = $this->reservation;
+    
         if (!$reservation || !$reservation->user) {
             Log::error('Reservation or user not found', [
-                'reservation_id' => $this->reservationId
+                'reservation_id' => $this->reservation
             ]);
             return;
         }

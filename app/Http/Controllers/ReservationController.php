@@ -11,6 +11,7 @@ use App\Mail\SendMail;
 use Illuminate\Support\Facades\Mail;
 use App\Events\Reservationed;
 use App\Listeners\SendQueueMail;
+use App\Jobs\ReservationJob;
 
 class ReservationController extends Controller
 {
@@ -43,22 +44,29 @@ class ReservationController extends Controller
     public function store(Request $request){
         $user = Auth::user();
 
-        $reservation = new Reservation();
-        $reservation->nhk_title = session('nhk.title');
-        $reservation->nhk_description = session('nhk.description') ?? '説明なし' ;
-        $reservation->nhk_genres = session('nhk.genres');
-        $reservation->start_time = session('nhk.start');
-        $reservation->end_time = session('nhk.end');
-        $reservation->nhk_tvEpisodeId = session('nhk.nhkId');
-        $reservation->nhk_code = session('nhk.areaId');
-        $reservation->is_active = true;
-        $reservation->notify_before_min = $request->input('set');
-        $reservation->user_id = $user->id;
-        $reservation->save();
+        $reservation = $user->reservations()->create([
+            'nhk_title'        => session('nhk.title'),
+            'nhk_description'  => session('nhk.description') ?? '説明なし',
+            'nhk_genres'       => session('nhk.genres'),
+            'start_time'       => session('nhk.start'),
+            'end_time'         => session('nhk.end'),
+            'nhk_tvEpisodeId'  => session('nhk.nhkId'),
+            'nhk_code'         => session('nhk.areaId'),
+            'is_active'        => true,
+            'notify_before_min'=> $request->input('set'),
+        ]);
+        //通知時間
+        $notifyAt = $reservation->start_time
+            ->copy()
+            ->subMinutes($reservation->notify_before_min);
+        // キューに入れる
+        ReservationJob::dispatch($reservation)
+            ->delay($notifyAt);
 
         $request->session()->forget('nhk');
         return redirect()->route('top')->with('message', '予約完了しました。メール通知をお待ちください。');
     }
+    
     public function mail(){
 
         return redirect()->route('top');

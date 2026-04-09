@@ -67,8 +67,8 @@ class ReservationController extends Controller
         return redirect()->route('top')->with('message', '予約完了しました。メール通知をお待ちください。');
     }
     
-    public function mail(){
-
-        return redirect()->route('top');
+    public function destroy(User $user, Reservation $reservation){
+        $reservation->delete();
+        return redirect()->route('reservation.list', $user)->with('message', '削除しました。');
     }
 }

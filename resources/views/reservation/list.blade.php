@@ -10,8 +10,14 @@
                 </h2>
             </div>
 
-            <div>
+            {{-- フラッシュメッセージの表示 --}}
+            @if (session('message'))
+                <div class="mt-1 alert alert-danger text-center">
+                    {{ session('message') }}
+                </div>
+            @endif
 
+            <div>
                 <div class="d-flex justify-content-center align-items-center">
                     <div>
                         <img style="width: 24px;" src="{{ asset('/image/memo.png') }}" alt="メモ">
@@ -36,8 +42,10 @@
                                 </dl>
 
                                 @if ($reservation->notify_at == null)
-                                    <form class="poji_abu" action="#">
-                                        <button class="delete">削除</button>
+                                    <form class="poji_abu" action="{{ route('delete', [$user, $reservation]) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')    
+                                        <button type="submit" class="delete">削除</button>
                                     </form>                                
                                 @endif
                             </li>

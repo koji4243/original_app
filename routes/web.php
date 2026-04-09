@@ -15,7 +15,6 @@ use App\Http\Controllers\ReservationController;
 |
 */
         //試し
-Route::get('/mail', [ReservationController::class, 'mail']);
 Route::get('/',[ToppageController::class, 'toppage'])->name('top');
 
 Route::middleware('auth')->group(function () {
@@ -37,4 +36,5 @@ Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
 
     Route::get('/{user}/list', [ReservationController::class, 'list'])->name('reservation.list');
 
+    Route::delete('/{user}/list/{reservation}/delete', [ReservationController::class, 'destroy'])->name('delete');
     });

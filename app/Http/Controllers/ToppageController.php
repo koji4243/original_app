@@ -28,8 +28,6 @@ class ToppageController extends Controller
                 // withInput() で入力値をセッションへ一時保存
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-        }
-
         $response = Http::get(
         config('services.nhk.base'),
         [
@@ -39,6 +37,7 @@ class ToppageController extends Controller
             'key' => config('services.nhk.key'),
         ]);
         $programs = collect($response->json());
-        return view('top', compact('areas', 'programs', 'request', 'reservedReservations'));
+        }
+    return view('top', compact('areas', 'programs', 'request', 'reservedReservations'));
     }
 }

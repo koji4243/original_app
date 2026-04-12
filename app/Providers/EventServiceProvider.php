@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         Reservationed::class => [
             SendQueueMail::class,
         ],
+            Registered::class => [
+                SendEmailVerificationNotification::class,
+        ],
     ];
 
     /**

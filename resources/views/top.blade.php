@@ -34,13 +34,13 @@
 
                 {{-- フラッシュメッセージの表示 --}}
                 @if (session('message'))
-                    <div class="mt-1 alert alert-success">
-                        {{ session('message') }}
+                    <div class="mt-2 text-center alert alert-{{ session('type', 'info') }}">
+                        {!! nl2br(e(session('message'))) !!}
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="mt-1 alert alert-danger text-start">
+                    <div class="mt-2 alert alert-danger text-start">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>

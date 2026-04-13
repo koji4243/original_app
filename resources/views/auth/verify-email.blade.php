@@ -1,6 +1,8 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        登録ありがとうございます！
+        ご利用を開始する前に、先ほどお送りしたメール内のリンクをクリックして、メールアドレスの確認をお願いいたします。
+        もしメールが届いていない場合は、再送することもできますのでご安心ください。
     </div>
 
     @if (session('status') == 'verification-link-sent')
@@ -15,7 +17,7 @@
 
             <div>
                 <x-primary-button>
-                    {{ __('Resend Verification Email') }}
+                    確認用メールを再送する
                 </x-primary-button>
             </div>
         </form>
@@ -24,7 +26,7 @@
             @csrf
 
             <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
+                ログアウト
             </button>
         </form>
     </div>

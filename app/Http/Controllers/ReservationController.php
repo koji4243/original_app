@@ -15,17 +15,6 @@ use App\Jobs\ReservationJob;
 
 class ReservationController extends Controller
 {
-    public function NotReceptionTime(Request $request){
-        $target = Carbon::parse($request->input('start'))->subHours(4);
-        //  予約受付時間外
-        if (now()->gt($target)) {
-            return redirect()
-                ->route('top')
-                ->with('message', "申し訳ございません。\n予約受付時間外です。")
-                ->with('type', 'warning');
-        }
-        return null;
-    }
     public function create(Request $request){
         //GET送信で来てほしくない
         if (!session()->has('nhk')) {
@@ -40,20 +29,19 @@ class ReservationController extends Controller
         return view('reservation.list', compact('users', 'user'));
     }
     public function setting(Request $request){
-        $response = $this->NotReceptionTime($request);
-        if ($response) {
-            return $response;
+        $deadline = Carbon::parse($request->input('start'))->subHours(4);
+        //  予約受付時間外
+        if (now()->isAfter($deadline)) {
+            return redirect()
+                ->route('top')
+                ->with('message', "申し訳ございません。\n予約受付時間外です。")
+                ->with('type', 'warning');
         }
-        
+
         $request->session()->put('nhk', $request->all());
         return view('reservation.create');
     }
     public function check(Request $request, User $user){
-        $response = $this->NotReceptionTime($request);
-        if ($response) {
-            return $response;
-        }
-
         $request->validate(['set' => 'required']);
         //通知時間
         $set = $request->input('set');
@@ -63,11 +51,6 @@ class ReservationController extends Controller
         return view('reservation.check', compact('set', 'notifyTime', 'user'));
     }
     public function store(Request $request){
-        $response = $this->NotReceptionTime($request);
-        if ($response) {
-            return $response;
-        }
-
         $user = Auth::user();
         $reservation = $user->reservations()->create([
             'nhk_title'        => session('nhk.title'),

@@ -30,9 +30,11 @@ Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
 
     Route::post('/setting', [ReservationController::class, 'setting'])->name('setting');
 
-    Route::post('/setting/check', [ReservationController::class, 'check'])->name('check');
+    Route::post('/setting/check', [ReservationController::class, 'check'])->name('check')
+        ->middleware('check.reception');
 
-    Route::post('/setting/{User}/store', [ReservationController::class, 'store'])->name('store');
+    Route::post('/setting/{User}/store', [ReservationController::class, 'store'])->name('store')
+        ->middleware('check.reception');
 
     Route::get('/{user}/list', [ReservationController::class, 'list'])->name('reservation.list');
 

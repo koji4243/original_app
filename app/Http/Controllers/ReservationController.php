@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Events\Reservationed;
 use App\Listeners\SendQueueMail;
 use App\Jobs\ReservationJob;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class ReservationController extends Controller
 {
@@ -81,5 +83,23 @@ class ReservationController extends Controller
     public function destroy(User $user, Reservation $reservation){
         $reservation->delete();
         return redirect()->route('reservation.list', $user)->with('message', '削除しました。');
+    }
+
+    public function apiCheck(){
+        $user = Auth::user();
+        $reservation = $user->reservations->first();
+
+        $response = Http::get(
+        config('services.nhk.base'),
+        [
+            'service' => 'g1',
+            'area' => $reservation->nhk_code,
+            'date' => Str::substr($reservation->start_time,0,10),
+            'key' => config('services.nhk.key'),
+        ]);
+        $nhk_program = ($response['g1']['publication']);
+        dd($nhk_program);
+
+        return redirect()->route('top');
     }
 }

@@ -41,6 +41,9 @@ li {
     color: #4d27b7;
     user-select: none;
 }
+.logo small {
+    font-size: 0.9rem;
+}
 .sab {
     position: relative;
 }

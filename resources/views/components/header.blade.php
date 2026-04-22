@@ -3,7 +3,7 @@
         <a class="navbar-item" href="{{ url('/') }}">
             <img src="{{ asset('/image/tvImg.jpg') }}" height="60" alt="テレビ">
         </a>
-        <span class="logo h2 ms-1 my-auto">NHK</span>
+        <span class="logo h2 ms-1 my-auto">NHK<small>_予約通知アプリ</small></span>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">

@@ -14,6 +14,11 @@ use App\Listeners\SendQueueMail;
 use App\Jobs\ReservationJob;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use App\Mail\SendChangeTitle;
+use App\Mail\SendOfQueueMail;
+
+
+use function Laravel\Prompts\progress;
 
 class ReservationController extends Controller
 {
@@ -85,21 +90,52 @@ class ReservationController extends Controller
         return redirect()->route('reservation.list', $user)->with('message', '削除しました。');
     }
 
+
+        //開発用　jobで使用
     public function apiCheck(){
         $user = Auth::user();
-        $reservation = $user->reservations->first();
+        $reservation = $user->reservations()->latest()->first();
+
 
         $response = Http::get(
-        config('services.nhk.base'),
-        [
-            'service' => 'g1',
-            'area' => $reservation->nhk_code,
-            'date' => Str::substr($reservation->start_time,0,10),
-            'key' => config('services.nhk.key'),
-        ]);
-        $nhk_program = ($response['g1']['publication']);
-        dd($nhk_program);
+            config('services.nhk.base'),
+            [
+                'service' => 'g1',
+                'area' => $reservation->nhk_code,
+                'date' => Carbon::parse($reservation->start_time)->format('Y-m-d'),
+                'key' => config('services.nhk.key'),
+            ]);
 
+        $programs = data_get($response->json(), 'g1.publication', []);
+        $programMap = collect($programs)
+            ->groupBy(fn ($p) => data_get($p, 'identifierGroup.tvSeriesId'));
+        // 番組をIDで引けるようにする
+        $programsForId = $programMap->get($reservation->nhk_tvEpisodeId);
+
+        if (!$programsForId) return;
+
+        if($reservation->notify_at === null){
+            foreach ($programsForId as $program) {
+                $apiTime = Carbon::parse(data_get($program, 'startDate'))->format('H:i');
+                $resTime = Carbon::parse($reservation->start_time)->format('H:i');
+
+                if ($apiTime === $resTime) {
+                    $apiSeriesId = data_get($program, 'identifierGroup.tvSeriesId');
+                    //  同じ番組
+                    if ($apiSeriesId === $reservation->nhk_tvEpisodeId) {
+                        dd('デバック用1');
+                        // Mail::to($user->email)
+                        //     ->send(new SendOfQueueMail($user, $reservation));
+                    //  差し替え
+                    } else {
+                        dd('デバック用2');
+                        // Mail::to($user->email)
+                        //     ->send(new SendChangeTitle($user, $reservation));
+                    }
+                break;
+                }
+            }
+        }
         return redirect()->route('top');
     }
 }

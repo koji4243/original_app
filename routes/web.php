@@ -14,7 +14,6 @@ use App\Http\Controllers\ReservationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-        //試し
 Route::get('/',[ToppageController::class, 'toppage'])->name('top');
 
 Route::middleware('auth')->group(function () {
@@ -39,4 +38,6 @@ Route::middleware(['auth', 'verified'])->prefix('auth')->group(function () {
     Route::get('/{user}/list', [ReservationController::class, 'list'])->name('reservation.list');
 
     Route::delete('/{user}/list/{reservation}/delete', [ReservationController::class, 'destroy'])->name('delete');
+
+    Route::get('/api-checck', [ReservationController::class, 'apiCheck']);
     });

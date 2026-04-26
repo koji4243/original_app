@@ -19,12 +19,11 @@ class ToppageController extends Controller
         $userId = Auth::id();
         $reservedReservations = Reservation::where('user_id', $userId)->get();
 
-        if ($request->input('area') === null && $request->has('area') ) {
+        if ($request->has('date') && $request->has('area') ) {
             $request->validate([
                 'area' => 'required',
             ]);
-        }
-        if ($request->has('date') && $request->has('area') ) {
+            
             $response = Http::get(
             config('services.nhk.base'),
             [

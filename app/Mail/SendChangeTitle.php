@@ -8,12 +8,11 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-
-class SendOfQueueMail extends Mailable
+class SendChangeTitle extends Mailable
 {
     use Queueable, SerializesModels;
+
     protected $user;
     protected $reservation;
     /**
@@ -41,7 +40,7 @@ class SendOfQueueMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.body',
+            view: 'mail.sub',
             with: [
             'user' => $this->user,
             'reservation' => $this->reservation,

@@ -1,11 +1,14 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white">
     <div class="container">
-        <a class="navbar-item" href="{{ url('/') }}">
-            <img src="{{ asset('/image/tvImg.jpg') }}" height="60" alt="テレビ">
-        </a>
-        <span class="logo h2 ms-1 my-auto">NHK</span>
+        <div class="navbar-item d-flex align-items-center">
+            <a class="navbar-item" href="{{ url('/') }}">
+                <img src="{{ asset('/image/tvImg.jpg') }}" height="60" alt="テレビ">
+            </a>
+            <span class="logo h2 ms-1 my-auto">NHK<small>_予約通知アプリ</small></span>
+        </div>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <div class="navbar-item" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
                 @guest
                     @if (Route::has('login'))
